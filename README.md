@@ -2,7 +2,21 @@
 
 This project consists of three parts. First, we are building an ETL Pipeline, where we load data, clean and process it and finally store it in a SQLite database. In the second step we are creating a machine learning pipeline, loading the data, building a machine learning model, where parameters are tuned using GridSearch. In the final step we are providing a Flask Web App, where you can enter your own message to be classified. Additionally you can see a few visuals explaining the data.
 
-### Instructions for running the app:
+## Required Packages
+ - pandas
+ - numpy
+ - sqlalchemy
+ - pickle
+ - nltk
+ - sklearn
+ - plotly
+ - flask
+ - joblib
+ - json
+
+
+
+## Instructions for running the app:
 
 
 1. Run the following commands in the project's root directory to set up your database and model.
@@ -37,3 +51,6 @@ This project consists of three parts. First, we are building an ETL Pipeline, wh
 |- classifier.pkl  # saved model 
 
 - README.md
+
+## Acknowledges
+I want to thank mentors and reviewers of the Udacity Nanodegree program where this project was part of.
