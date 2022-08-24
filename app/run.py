@@ -1,6 +1,7 @@
 import json
 import plotly
 import pandas as pd
+import joblib
 
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
@@ -8,7 +9,7 @@ from nltk.tokenize import word_tokenize
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
-from sklearn.externals import joblib
+#from sklearn.externals import joblib
 from sqlalchemy import create_engine
 
 
@@ -26,11 +27,11 @@ def tokenize(text):
     return clean_tokens
 
 # load data
-engine = create_engine('sqlite:///../data/YourDatabaseName.db')
-df = pd.read_sql_table('YourTableName', engine)
+engine = create_engine('sqlite:///../data/Disaster_response.db')
+df = pd.read_sql_table('messages_disaster_response', engine)
 
 # load model
-model = joblib.load("../models/your_model_name.pkl")
+model = joblib.load("../models/classifier.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
@@ -42,7 +43,17 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
-    
+
+    # count messages related to earthquake
+    earthquake_counts = df.groupby('earthquake').count()['message']
+    earthquake_counts.index = ['non_earthquake_related', 'earthquake_related']
+    earthquake_names = list(earthquake_counts.index)    
+
+    # count messages related to floods
+    flood_counts = df.groupby('floods').count()['message']
+    flood_counts.index = ['non_flood_related', 'flood_related']
+    flood_names = list(flood_counts.index)
+
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -61,6 +72,42 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=earthquake_names,
+                    y=earthquake_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Messages related to earthquakes or not',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Earthquake"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=flood_names,
+                    y=flood_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Message related to floods or not',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Floods"
                 }
             }
         }
@@ -93,7 +140,7 @@ def go():
 
 
 def main():
-    app.run(host='0.0.0.0', port=3000, debug=True)
+    app.run(host='0.0.0.0', port=3001, debug=True)
 
 
 if __name__ == '__main__':
