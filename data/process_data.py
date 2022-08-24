@@ -58,7 +58,9 @@ def clean_data(df):
     df = pd.concat([df, categories], axis=1)
 
     # drop duplicates
-    df = df.drop_duplicates()
+    clean_df = df.drop_duplicates()
+
+    return clean_df
 
 
 def save_data(df, database_filename):
@@ -82,9 +84,11 @@ def main():
         print('Loading data...\n    MESSAGES: {}\n    CATEGORIES: {}'
               .format(messages_filepath, categories_filepath))
         df = load_data(messages_filepath, categories_filepath)
+        print(df.head())
 
         print('Cleaning data...')
         df = clean_data(df)
+        print(df.head())
         
         print('Saving data...\n    DATABASE: {}'.format(database_filepath))
         save_data(df, database_filepath)
